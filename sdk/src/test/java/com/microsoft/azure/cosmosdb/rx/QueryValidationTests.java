@@ -22,12 +22,7 @@
  */
 package com.microsoft.azure.cosmosdb.rx;
 
-import com.microsoft.azure.cosmosdb.Database;
-import com.microsoft.azure.cosmosdb.Document;
-import com.microsoft.azure.cosmosdb.DocumentCollection;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
-import com.microsoft.azure.cosmosdb.RequestOptions;
+import com.microsoft.azure.cosmosdb.*;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Factory;
@@ -129,9 +124,10 @@ public class QueryValidationTests extends TestSuiteBase {
         List<Document> receivedDocuments = new ArrayList<Document>();
         do {
             FeedOptions options = new FeedOptions();
+            ExecutionOptions options1 = new ExecutionOptions();
             options.setMaxItemCount(pageSize);
             options.setEnableCrossPartitionQuery(true);
-            options.setMaxDegreeOfParallelism(2);
+            options1.setMaxDegreeOfParallelism(2);
             options.setRequestContinuation(requestContinuation);
             Observable<FeedResponse<Document>> queryObservable = client.queryDocuments(collectionLink, query,
                                                                                        options);

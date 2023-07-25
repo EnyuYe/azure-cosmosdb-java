@@ -71,8 +71,8 @@ public class ClientRetryPolicy implements IDocumentClientRetryPolicy {
                              RetryOptions retryOptions) {
 
         this.throttlingRetry = new ResourceThrottleRetryPolicy(
-                retryOptions.getMaxRetryAttemptsOnThrottledRequests(),
-                retryOptions.getMaxRetryWaitTimeInSeconds());
+                retryOptions.getmaxThrottledRequests(),
+                retryOptions.getmaxWaitTimeSeconds());
         this.rxNettyConnectionPoolExhaustedRetry = new ConnectionPoolExhaustedRetry();
         this.globalEndpointManager = globalEndpointManager;
         this.failoverRetryCount = 0;

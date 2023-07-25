@@ -75,8 +75,8 @@ public class RetryThrottleTest extends TestSuiteBase {
 
         ConnectionPolicy policy = new ConnectionPolicy();
         RetryOptions retryOptions = new RetryOptions();
-        retryOptions.setMaxRetryAttemptsOnThrottledRequests(Integer.MAX_VALUE);
-        retryOptions.setMaxRetryWaitTimeInSeconds(LARGE_TIMEOUT);
+        retryOptions.setmaxThrottledRequests(Integer.MAX_VALUE);
+        retryOptions.setmaxWaitTimeSeconds(LARGE_TIMEOUT);
         policy.setRetryOptions(retryOptions);
 
         AsyncDocumentClient.Builder builder = this.clientBuilder()

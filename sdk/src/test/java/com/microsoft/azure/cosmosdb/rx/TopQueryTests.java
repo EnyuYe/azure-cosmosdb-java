@@ -22,6 +22,7 @@
  */
 package com.microsoft.azure.cosmosdb.rx;
 
+import com.microsoft.azure.cosmosdb.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -30,18 +31,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import com.microsoft.azure.cosmosdb.RetryAnalyzer;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-import com.microsoft.azure.cosmosdb.Database;
-import com.microsoft.azure.cosmosdb.Document;
-import com.microsoft.azure.cosmosdb.DocumentCollection;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
-import com.microsoft.azure.cosmosdb.PartitionKey;
 import com.microsoft.azure.cosmosdb.rx.internal.Utils.ValueHolder;
 import com.microsoft.azure.cosmosdb.rx.internal.query.TakeContinuationToken;
 
@@ -68,9 +62,10 @@ public class TopQueryTests extends TestSuiteBase {
     public void queryDocumentsWithTop(boolean qmEnabled) throws Exception {
 
         FeedOptions options = new FeedOptions();
+        ExecutionOptions options1 = new ExecutionOptions();
         options.setEnableCrossPartitionQuery(true);
         options.setMaxItemCount(9);
-        options.setMaxDegreeOfParallelism(2);
+        options1.setMaxDegreeOfParallelism(2);
         options.setPopulateQueryMetrics(qmEnabled);
 
         int expectedTotalSize = 20;
@@ -168,9 +163,10 @@ public class TopQueryTests extends TestSuiteBase {
 
         do {
             FeedOptions options = new FeedOptions();
+            ExecutionOptions options1 = new ExecutionOptions();
             options.setMaxItemCount(pageSize);
             options.setEnableCrossPartitionQuery(true);
-            options.setMaxDegreeOfParallelism(2);
+            options1.setMaxDegreeOfParallelism(2);
             options.setRequestContinuation(requestContinuation);
             Observable<FeedResponse<Document>> queryObservable = client.queryDocuments(createdCollection.getSelfLink(),
                     query, options);

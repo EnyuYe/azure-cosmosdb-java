@@ -27,16 +27,16 @@ package com.microsoft.azure.cosmosdb;
  * Encapsulates retry options in the Azure Cosmos DB database service.
  */
 public class RetryOptions {
-    private int maxRetryAttemptsOnThrottledRequests;
-    private int maxRetryWaitTimeInSeconds;
+    private int maxThrottledRequests;
+    private int maxWaitTimeSeconds;
 
     /**
      * Creates a new instance of the RetryOptions class and initializes all
      * properties to default values.
      */
     public RetryOptions() {
-        this.maxRetryAttemptsOnThrottledRequests = 9;
-        this.maxRetryWaitTimeInSeconds = 30;
+        this.maxThrottledRequests = 9;
+        this.maxWaitTimeSeconds = 30;
     }
 
     /**
@@ -45,8 +45,8 @@ public class RetryOptions {
      *
      * @return the maximum number of retries.
      */
-    public int getMaxRetryAttemptsOnThrottledRequests() {
-        return this.maxRetryAttemptsOnThrottledRequests;
+    public int getmaxThrottledRequests() {
+        return this.maxThrottledRequests;
     }
 
     /**
@@ -63,15 +63,15 @@ public class RetryOptions {
      * throttled, the same request will be issued for a maximum of 10 times to
      * the server before an error is returned to the application.
      *
-     * @param maxRetryAttemptsOnThrottledRequests the max number of retry attempts on failed requests due to a
+     * @param maxThrottledRequests the max number of retry attempts on failed requests due to a
      *                                            throttle error.
      */
-    public void setMaxRetryAttemptsOnThrottledRequests(int maxRetryAttemptsOnThrottledRequests) {
-        if (maxRetryAttemptsOnThrottledRequests < 0) {
+    public void setmaxThrottledRequests(int maxThrottledRequests) {
+        if (maxThrottledRequests < 0) {
             throw new IllegalArgumentException("maxRetryAttemptsOnThrottledRequests value must be a positive integer.");
         }
 
-        this.maxRetryAttemptsOnThrottledRequests = maxRetryAttemptsOnThrottledRequests;
+        this.maxThrottledRequests = maxThrottledRequests;
     }
 
     /**
@@ -79,8 +79,8 @@ public class RetryOptions {
      *
      * @return the maximum retry time in seconds.
      */
-    public int getMaxRetryWaitTimeInSeconds() {
-        return this.maxRetryWaitTimeInSeconds;
+    public int getmaxWaitTimeSeconds() {
+        return this.maxWaitTimeSeconds;
     }
 
     /**
@@ -95,22 +95,22 @@ public class RetryOptions {
      * <p>
      * The default value is 30 seconds.
      *
-     * @param maxRetryWaitTimeInSeconds the maximum number of seconds a request will be retried.
+     * @param maxWaitTimeSeconds the maximum number of seconds a request will be retried.
      */
-    public void setMaxRetryWaitTimeInSeconds(int maxRetryWaitTimeInSeconds) {
-        if (maxRetryWaitTimeInSeconds < 0 || maxRetryWaitTimeInSeconds > Integer.MAX_VALUE / 1000) {
+    public void setmaxWaitTimeSeconds(int maxWaitTimeSeconds) {
+        if (maxWaitTimeSeconds < 0 || maxWaitTimeSeconds > Integer.MAX_VALUE / 1000) {
             throw new IllegalArgumentException(
                     "value must be a positive integer between the range of 0 to " + Integer.MAX_VALUE / 1000);
         }
 
-        this.maxRetryWaitTimeInSeconds = maxRetryWaitTimeInSeconds;
+        this.maxWaitTimeSeconds = maxWaitTimeSeconds;
     }
 
     @Override
     public String toString() {
         return "RetryOptions{" +
-                "maxRetryAttemptsOnThrottledRequests=" + maxRetryAttemptsOnThrottledRequests +
-                ", maxRetryWaitTimeInSeconds=" + maxRetryWaitTimeInSeconds +
+                "maxRetryAttemptsOnThrottledRequests=" + maxThrottledRequests +
+                ", maxRetryWaitTimeInSeconds=" + maxWaitTimeSeconds +
                 '}';
     }
 }

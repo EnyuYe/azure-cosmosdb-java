@@ -24,18 +24,13 @@ package com.microsoft.azure.cosmosdb.rx;
 
 import java.util.ArrayList;
 
+import com.microsoft.azure.cosmosdb.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import com.microsoft.azure.cosmosdb.Database;
-import com.microsoft.azure.cosmosdb.Document;
-import com.microsoft.azure.cosmosdb.DocumentCollection;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
-import com.microsoft.azure.cosmosdb.ResourceResponse;
 import com.microsoft.azure.cosmosdb.rx.AsyncDocumentClient.Builder;
 
 import rx.Observable;
@@ -91,9 +86,10 @@ public class AggregateQueryTests extends TestSuiteBase {
     public void queryDocumentsWithAggregates(boolean qmEnabled) throws Exception {
 
         FeedOptions options = new FeedOptions();
+        ExecutionOptions options1 = new ExecutionOptions();
         options.setEnableCrossPartitionQuery(true);
         options.setPopulateQueryMetrics(qmEnabled);
-        options.setMaxDegreeOfParallelism(2);
+        options1.setMaxDegreeOfParallelism(2);
         
         for (QueryConfig queryConfig : queryConfigs) {
             // Cross partition Non value aggregates are not supported

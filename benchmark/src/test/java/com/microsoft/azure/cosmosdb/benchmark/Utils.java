@@ -63,8 +63,8 @@ public class Utils {
     public static AsyncDocumentClient housekeepingClient() {
         ConnectionPolicy connectionPolicy = new ConnectionPolicy();
         RetryOptions options = new RetryOptions();
-        options.setMaxRetryAttemptsOnThrottledRequests(100);
-        options.setMaxRetryWaitTimeInSeconds(60);
+        options.setmaxThrottledRequests(100);
+        options.setmaxWaitTimeSeconds(60);
         connectionPolicy.setRetryOptions(options);
         return new AsyncDocumentClient.Builder().withServiceEndpoint(TestConfigurations.HOST)
                 .withMasterKeyOrResourceToken(TestConfigurations.MASTER_KEY)

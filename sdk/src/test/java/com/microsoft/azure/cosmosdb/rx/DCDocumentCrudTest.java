@@ -22,19 +22,7 @@
  */
 package com.microsoft.azure.cosmosdb.rx;
 
-import com.microsoft.azure.cosmosdb.ConnectionMode;
-import com.microsoft.azure.cosmosdb.ConnectionPolicy;
-import com.microsoft.azure.cosmosdb.ConsistencyLevel;
-import com.microsoft.azure.cosmosdb.Database;
-import com.microsoft.azure.cosmosdb.Document;
-import com.microsoft.azure.cosmosdb.DocumentCollection;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
-import com.microsoft.azure.cosmosdb.PartitionKey;
-import com.microsoft.azure.cosmosdb.RequestOptions;
-import com.microsoft.azure.cosmosdb.ResourceResponse;
-import com.microsoft.azure.cosmosdb.StoredProcedure;
-import com.microsoft.azure.cosmosdb.StoredProcedureResponse;
+import com.microsoft.azure.cosmosdb.*;
 import com.microsoft.azure.cosmosdb.internal.OperationType;
 import com.microsoft.azure.cosmosdb.internal.ResourceType;
 import com.microsoft.azure.cosmosdb.internal.directconnectivity.Protocol;
@@ -232,8 +220,9 @@ public class DCDocumentCrudTest extends TestSuiteBase {
         waitIfNeededForReplicasToCatchUp(this.clientBuilder());
 
         FeedOptions options = new FeedOptions();
+        ExecutionOptions options1 = new ExecutionOptions();
         options.setEnableCrossPartitionQuery(true);
-        options.setMaxDegreeOfParallelism(-1);
+        options1.setMaxDegreeOfParallelism(-1);
         options.setMaxItemCount(100);
 
         Observable<FeedResponse<Document>> results = client.queryDocuments(getCollectionLink(), "SELECT * FROM r", options);

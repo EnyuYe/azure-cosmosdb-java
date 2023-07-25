@@ -22,6 +22,7 @@
  */
 package com.microsoft.azure.cosmosdb.rx;
 
+import com.microsoft.azure.cosmosdb.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.microsoft.azure.cosmosdb.RetryAnalyzer;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -46,14 +46,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-import com.microsoft.azure.cosmosdb.Database;
-import com.microsoft.azure.cosmosdb.Document;
-import com.microsoft.azure.cosmosdb.DocumentClientException;
-import com.microsoft.azure.cosmosdb.DocumentCollection;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
-import com.microsoft.azure.cosmosdb.PartitionKey;
-import com.microsoft.azure.cosmosdb.ResourceResponse;
 import com.microsoft.azure.cosmosdb.internal.query.QueryItem;
 import com.microsoft.azure.cosmosdb.internal.routing.Range;
 import com.microsoft.azure.cosmosdb.rx.internal.Utils.ValueHolder;
@@ -468,9 +460,10 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         String requestContinuation = null;
         do {
             FeedOptions options = new FeedOptions();
+            ExecutionOptions options1 = new ExecutionOptions();
             options.setMaxItemCount(1);
             options.setEnableCrossPartitionQuery(true);
-            options.setMaxDegreeOfParallelism(2);
+            options1.setMaxDegreeOfParallelism(2);
             OrderByContinuationToken orderByContinuationToken = new OrderByContinuationToken(
                     new CompositeContinuationToken(
                             "asdf",
@@ -508,9 +501,10 @@ public class OrderbyDocumentQueryTest extends TestSuiteBase {
         List<Document> receivedDocuments = new ArrayList<Document>();
         do {
             FeedOptions options = new FeedOptions();
+            ExecutionOptions options1 = new ExecutionOptions();
             options.setMaxItemCount(pageSize);
             options.setEnableCrossPartitionQuery(true);
-            options.setMaxDegreeOfParallelism(2);
+            options1.setMaxDegreeOfParallelism(2);
             options.setRequestContinuation(requestContinuation);
             Observable<FeedResponse<Document>> queryObservable = client.queryDocuments(getCollectionLink(), query,
                     options);

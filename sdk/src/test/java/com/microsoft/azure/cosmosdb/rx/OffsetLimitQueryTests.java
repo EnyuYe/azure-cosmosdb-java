@@ -22,11 +22,7 @@
  */
 package com.microsoft.azure.cosmosdb.rx;
 
-import com.microsoft.azure.cosmosdb.Database;
-import com.microsoft.azure.cosmosdb.Document;
-import com.microsoft.azure.cosmosdb.DocumentCollection;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
+import com.microsoft.azure.cosmosdb.*;
 import com.microsoft.azure.cosmosdb.internal.directconnectivity.Protocol;
 import com.microsoft.azure.cosmosdb.rx.internal.Utils.ValueHolder;
 import com.microsoft.azure.cosmosdb.rx.internal.query.OffsetContinuationToken;
@@ -68,10 +64,11 @@ public class OffsetLimitQueryTests extends TestSuiteBase {
         int takeCount = 10;
         String query = "SELECT * from c OFFSET " + skipCount + " LIMIT " + takeCount;
         FeedOptions options = new FeedOptions();
+        ExecutionOptions options1 = new ExecutionOptions();
         options.setMaxItemCount(5);
         options.setEnableCrossPartitionQuery(true);
         options.setPopulateQueryMetrics(qmEnabled);
-        options.setMaxDegreeOfParallelism(2);
+        options1.setMaxDegreeOfParallelism(2);
         Observable<FeedResponse<Document>> queryObservable = client.queryDocuments(createdCollection.getSelfLink(),
                 query, options);
 
@@ -140,9 +137,10 @@ public class OffsetLimitQueryTests extends TestSuiteBase {
 
         do {
             FeedOptions options = new FeedOptions();
+            ExecutionOptions options1 = new ExecutionOptions();
             options.setMaxItemCount(pageSize);
             options.setEnableCrossPartitionQuery(true);
-            options.setMaxDegreeOfParallelism(2);
+            options1.setMaxDegreeOfParallelism(2);
             options.setRequestContinuation(requestContinuation);
             Observable<FeedResponse<Document>> queryObservable =
                     client.queryDocuments(createdCollection.getSelfLink(), query, options);

@@ -22,14 +22,7 @@
  */
 package com.microsoft.azure.cosmosdb.rx;
 
-import com.microsoft.azure.cosmosdb.BridgeInternal;
-import com.microsoft.azure.cosmosdb.Database;
-import com.microsoft.azure.cosmosdb.Document;
-import com.microsoft.azure.cosmosdb.DocumentClientException;
-import com.microsoft.azure.cosmosdb.DocumentCollection;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
-import com.microsoft.azure.cosmosdb.QueryMetrics;
+import com.microsoft.azure.cosmosdb.*;
 import com.microsoft.azure.cosmosdb.internal.routing.Range;
 import com.microsoft.azure.cosmosdb.rx.internal.Utils.ValueHolder;
 import com.microsoft.azure.cosmosdb.rx.internal.query.CompositeContinuationToken;
@@ -79,10 +72,11 @@ public class ParallelDocumentQueryTest extends TestSuiteBase {
     public void queryDocuments(boolean qmEnabled) {
         String query = "SELECT * from c where c.prop = 99";
         FeedOptions options = new FeedOptions();
+        ExecutionOptions options1 = new ExecutionOptions();
         options.setMaxItemCount(5);
         options.setEnableCrossPartitionQuery(true);
         options.setPopulateQueryMetrics(qmEnabled);
-        options.setMaxDegreeOfParallelism(2);
+        options1.setMaxDegreeOfParallelism(2);
         Observable<FeedResponse<Document>> queryObservable = client
                 .queryDocuments(getCollectionLink(), query, options);
 
@@ -104,16 +98,17 @@ public class ParallelDocumentQueryTest extends TestSuiteBase {
     public void queryMetricEquality() throws Exception {
         String query = "SELECT * from c where c.prop = 99";
         FeedOptions options = new FeedOptions();
+        ExecutionOptions options1 = new ExecutionOptions();
         options.setMaxItemCount(5);
         options.setEnableCrossPartitionQuery(true);
         options.setPopulateQueryMetrics(true);
-        options.setMaxDegreeOfParallelism(0);
+        options1.setMaxDegreeOfParallelism(0);
 
         Observable<FeedResponse<Document>> queryObservable = client
                 .queryDocuments(getCollectionLink(), query, options);
         List<FeedResponse<Document>> resultList1 = queryObservable.toList().toBlocking().single();
 
-        options.setMaxDegreeOfParallelism(4);
+        options1.setMaxDegreeOfParallelism(4);
         Observable<FeedResponse<Document>> threadedQueryObs = client.queryDocuments(getCollectionLink(), query,
                 options);
         List<FeedResponse<Document>> resultList2 = threadedQueryObs.toList().toBlocking().single();
@@ -159,9 +154,10 @@ public class ParallelDocumentQueryTest extends TestSuiteBase {
     public void queryDocumentsWithPageSize() {
         String query = "SELECT * from root";
         FeedOptions options = new FeedOptions();
+        ExecutionOptions options1 = new ExecutionOptions();
         int pageSize = 3;
         options.setMaxItemCount(pageSize);
-        options.setMaxDegreeOfParallelism(-1);
+        options1.setMaxDegreeOfParallelism(-1);
         options.setEnableCrossPartitionQuery(true);
         Observable<FeedResponse<Document>> queryObservable = client
                 .queryDocuments(getCollectionLink(), query, options);
@@ -370,9 +366,10 @@ public class ParallelDocumentQueryTest extends TestSuiteBase {
         List<Document> receivedDocuments = new ArrayList<Document>();
         do {
             FeedOptions options = new FeedOptions();
+            ExecutionOptions options1 = new ExecutionOptions();
             options.setMaxItemCount(pageSize);
             options.setEnableCrossPartitionQuery(true);
-            options.setMaxDegreeOfParallelism(2);
+            options1.setMaxDegreeOfParallelism(2);
             options.setRequestContinuation(requestContinuation);
             Observable<FeedResponse<Document>> queryObservable = client.queryDocuments(getCollectionLink(), query,
                     options);
@@ -407,8 +404,9 @@ public class ParallelDocumentQueryTest extends TestSuiteBase {
     
     private void runUnsupportedQueryForFailures(String query){
         FeedOptions options = new FeedOptions();
+        ExecutionOptions options1 = new ExecutionOptions();
         options.setEnableCrossPartitionQuery(true);
-        options.setMaxDegreeOfParallelism(2);
+        options1.setMaxDegreeOfParallelism(2);
         Observable<FeedResponse<Document>> queryObservable = client.queryDocuments(getCollectionLink(),
                                                                                    query,
                                                                                    options);
