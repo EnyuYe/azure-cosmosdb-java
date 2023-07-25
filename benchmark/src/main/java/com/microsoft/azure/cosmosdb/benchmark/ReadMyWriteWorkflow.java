@@ -23,14 +23,7 @@
 
 package com.microsoft.azure.cosmosdb.benchmark;
 
-import com.microsoft.azure.cosmosdb.Document;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.PartitionKey;
-import com.microsoft.azure.cosmosdb.RequestOptions;
-import com.microsoft.azure.cosmosdb.ResourceResponse;
-import com.microsoft.azure.cosmosdb.SqlParameter;
-import com.microsoft.azure.cosmosdb.SqlParameterCollection;
-import com.microsoft.azure.cosmosdb.SqlQuerySpec;
+import com.microsoft.azure.cosmosdb.*;
 import com.microsoft.azure.cosmosdb.internal.Utils;
 import com.microsoft.azure.cosmosdb.rx.internal.NotFoundException;
 import org.apache.commons.lang3.RandomUtils;
@@ -250,7 +243,8 @@ class ReadMyWriteWorkflow extends AsyncBenchmark<Document> {
      */
     private Observable<Document> xPartitionQuery(SqlQuerySpec query) {
         FeedOptions options = new FeedOptions();
-        options.setMaxDegreeOfParallelism(-1);
+        ExecutionOptions options1 = new ExecutionOptions();
+        options1.setMaxDegreeOfParallelism(-1);
         options.setEnableCrossPartitionQuery(true);
 
         return client.queryDocuments(getCollectionLink(), query, options)

@@ -468,4 +468,24 @@ class Configuration {
 
         return this.graphiteMeterRegistry;
     }
+
+    public boolean shouldContinue(long startTimeMillis, long iterationCount) {
+
+        Duration maxDurationTime = getMaxRunningTimeDuration();
+        int maxNumberOfOperations = getNumberOfOperations();
+
+        if (maxDurationTime == null) {
+            return iterationCount < maxNumberOfOperations;
+        }
+
+        if (startTimeMillis + maxDurationTime.toMillis() < System.currentTimeMillis()) {
+            return false;
+        }
+
+        if (maxNumberOfOperations < 0) {
+            return true;
+        }
+
+        return iterationCount < maxNumberOfOperations;
+    }
 }

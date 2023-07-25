@@ -22,18 +22,13 @@
  */
 
 package com.microsoft.azure.cosmosdb;
-
 /**
  * Specifies the options associated with feed methods (enumeration operations) in the Azure Cosmos DB database service.
  */
 public final class FeedOptions extends FeedOptionsBase {
     private String sessionToken;
     private String partitionKeyRangeId;
-    private Boolean enableScanInQuery;
-    private Boolean emitVerboseTracesInQuery;
     private Boolean enableCrossPartitionQuery;
-    private int maxDegreeOfParallelism;
-    private int maxBufferedItemCount;
     private int responseContinuationTokenLimitInKb;
     private boolean allowEmptyPages;
 
@@ -43,11 +38,7 @@ public final class FeedOptions extends FeedOptionsBase {
         super(options);
         this.sessionToken = options.sessionToken;
         this.partitionKeyRangeId = options.partitionKeyRangeId;
-        this.enableScanInQuery = options.enableScanInQuery;
-        this.emitVerboseTracesInQuery = options.emitVerboseTracesInQuery;
         this.enableCrossPartitionQuery = options.enableCrossPartitionQuery;
-        this.maxDegreeOfParallelism = options.maxDegreeOfParallelism;
-        this.maxBufferedItemCount = options.maxBufferedItemCount;
         this.responseContinuationTokenLimitInKb = options.responseContinuationTokenLimitInKb;
         this.allowEmptyPages = options.allowEmptyPages;
     }
@@ -57,7 +48,7 @@ public final class FeedOptions extends FeedOptionsBase {
      *
      * @return the partitionKeyRangeId.
      */
-    public String getPartitionKeyRangeIdInternal() {
+    public String getPKRangeId() {
         return this.partitionKeyRangeId;
     }
 
@@ -91,48 +82,6 @@ public final class FeedOptions extends FeedOptionsBase {
     }
 
     /**
-     * Gets the option to allow scan on the queries which couldn't be served as
-     * indexing was opted out on the requested paths.
-     *
-     * @return the option of enable scan in query.
-     */
-    public Boolean getEnableScanInQuery() {
-        return this.enableScanInQuery;
-    }
-
-    /**
-     * Sets the option to allow scan on the queries which couldn't be served as
-     * indexing was opted out on the requested paths.
-     *
-     * @param enableScanInQuery
-     *            the option of enable scan in query.
-     */
-    public void setEnableScanInQuery(Boolean enableScanInQuery) {
-        this.enableScanInQuery = enableScanInQuery;
-    }
-
-    /**
-     * Gets the option to allow queries to emit out verbose traces for
-     * investigation.
-     *
-     * @return the emit verbose traces in query.
-     */
-    public Boolean getEmitVerboseTracesInQuery() {
-        return this.emitVerboseTracesInQuery;
-    }
-
-    /**
-     * Sets the option to allow queries to emit out verbose traces for
-     * investigation.
-     *
-     * @param emitVerboseTracesInQuery
-     *            the emit verbose traces in query.
-     */
-    public void setEmitVerboseTracesInQuery(Boolean emitVerboseTracesInQuery) {
-        this.emitVerboseTracesInQuery = emitVerboseTracesInQuery;
-    }
-
-    /**
      * Gets the option to allow queries to run across all partitions of the
      * collection.
      *
@@ -153,50 +102,6 @@ public final class FeedOptions extends FeedOptionsBase {
      */
     public void setEnableCrossPartitionQuery(Boolean enableCrossPartitionQuery) {
         this.enableCrossPartitionQuery = enableCrossPartitionQuery;
-    }
-
-    /**
-     * Gets the number of concurrent operations run client side during parallel
-     * query execution.
-     *
-     * @return number of concurrent operations run client side during parallel
-     *         query execution.
-     */
-    public int getMaxDegreeOfParallelism() {
-        return maxDegreeOfParallelism;
-    }
-
-    /**
-     * Sets the number of concurrent operations run client side during parallel
-     * query execution.
-     *
-     * @param maxDegreeOfParallelism
-     *            number of concurrent operations.
-     */
-    public void setMaxDegreeOfParallelism(int maxDegreeOfParallelism) {
-        this.maxDegreeOfParallelism = maxDegreeOfParallelism;
-    }
-
-    /**
-     * Gets the maximum number of items that can be buffered client side during
-     * parallel query execution.
-     *
-     * @return maximum number of items that can be buffered client side during
-     *         parallel query execution.
-     */
-    public int getMaxBufferedItemCount() {
-        return maxBufferedItemCount;
-    }
-
-    /**
-     * Sets the maximum number of items that can be buffered client side during
-     * parallel query execution.
-     *
-     * @param maxBufferedItemCount
-     *            maximum number of items.
-     */
-    public void setMaxBufferedItemCount(int maxBufferedItemCount) {
-        this.maxBufferedItemCount = maxBufferedItemCount;
     }
 
     /**

@@ -179,30 +179,13 @@ abstract class AsyncBenchmark<T> {
 
     protected abstract void performWorkload(Subscriber<T> subs, long i) throws Exception;
 
-    private boolean shouldContinue(long startTimeMillis, long iterationCount) {
 
-        Duration maxDurationTime = configuration.getMaxRunningTimeDuration();
-        int maxNumberOfOperations = configuration.getNumberOfOperations();
-
-        if (maxDurationTime == null) {
-            return iterationCount < maxNumberOfOperations;
-        }
-
-        if (startTimeMillis + maxDurationTime.toMillis() < System.currentTimeMillis()) {
-            return false;
-        }
-
-        if (maxNumberOfOperations < 0) {
-            return true;
-        }
-
-        return iterationCount < maxNumberOfOperations;
-    }
 
     void run() throws Exception {
 
         successMeter = metricsRegistry.meter("#Successful Operations");
         failureMeter = metricsRegistry.meter("#Unsuccessful Operations");
+        Configuration configurations = new Configuration();
 
         if (configuration.getOperationType() == Configuration.Operation.ReadLatency
                 || configuration.getOperationType() == Configuration.Operation.WriteLatency) {
@@ -215,7 +198,7 @@ abstract class AsyncBenchmark<T> {
         AtomicLong count = new AtomicLong(0);
         long i;
 
-        for ( i = 0; shouldContinue(startTime, i); i++) {
+        for ( i = 0; configurations.shouldContinue(startTime, i); i++) {
 
             Subscriber<T> subs = new Subscriber<T>() {
 

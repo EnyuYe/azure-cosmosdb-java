@@ -27,14 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.microsoft.azure.cosmosdb.BridgeInternal;
-import com.microsoft.azure.cosmosdb.ConsistencyLevel;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
-import com.microsoft.azure.cosmosdb.PartitionKeyRange;
-import com.microsoft.azure.cosmosdb.Resource;
-import com.microsoft.azure.cosmosdb.SqlParameterCollection;
-import com.microsoft.azure.cosmosdb.SqlQuerySpec;
+import com.microsoft.azure.cosmosdb.*;
 import com.microsoft.azure.cosmosdb.internal.HttpConstants;
 import com.microsoft.azure.cosmosdb.internal.OperationType;
 import com.microsoft.azure.cosmosdb.internal.ResourceType;
@@ -87,7 +80,7 @@ implements IDocumentQueryExecutionContext<T> {
 
     public String getPartitionKeyId() {
         // TODO Auto-generated method stub
-        return this.feedOptions.getPartitionKeyRangeIdInternal();
+        return this.feedOptions.getPKRangeId();
     }
 
     public RxDocumentServiceRequest createDocumentServiceRequest(Map<String, String> requestHeaders,
@@ -185,7 +178,7 @@ implements IDocumentQueryExecutionContext<T> {
                     Strings.toString(feedOptions.getEnableCrossPartitionQuery()));
         }
 
-        if (feedOptions.getMaxDegreeOfParallelism() != 0) {
+        if (ExecutionOptions.getMaxDegreeOfParallelism() != 0) {
             requestHeaders.put(HttpConstants.HttpHeaders.PARALLELIZE_CROSS_PARTITION_QUERY, Strings.toString(true));
         }
 

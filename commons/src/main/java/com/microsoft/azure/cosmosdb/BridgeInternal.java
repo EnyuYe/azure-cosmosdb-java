@@ -129,14 +129,14 @@ public class BridgeInternal {
                 headers.put(HttpConstants.HttpHeaders.SESSION_TOKEN, feedOptions.getSessionToken());
             }
 
-            if (feedOptions.getEnableScanInQuery() != null) {
+            if (QueryOptions.getEnableScanInQuery() != null) {
                 headers.put(HttpConstants.HttpHeaders.ENABLE_SCAN_IN_QUERY,
-                        feedOptions.getEnableScanInQuery().toString());
+                        QueryOptions.getEnableScanInQuery().toString());
             }
 
-            if (feedOptions.getEmitVerboseTracesInQuery() != null) {
+            if (QueryOptions.getEmitVerboseTracesInQuery() != null) {
                 headers.put(HttpConstants.HttpHeaders.EMIT_VERBOSE_TRACES_IN_QUERY,
-                        feedOptions.getEmitVerboseTracesInQuery().toString());
+                        QueryOptions.getEmitVerboseTracesInQuery().toString());
             }
 
             if (feedOptions.getEnableCrossPartitionQuery() != null) {
@@ -144,7 +144,7 @@ public class BridgeInternal {
                         feedOptions.getEnableCrossPartitionQuery().toString());
             }
 
-            if (feedOptions.getMaxDegreeOfParallelism() != 0) {
+            if (ExecutionOptions.getMaxDegreeOfParallelism() != 0) {
                 headers.put(HttpConstants.HttpHeaders.PARALLELIZE_CROSS_PARTITION_QUERY, Boolean.TRUE.toString());
             }
 

@@ -97,7 +97,7 @@ public class DocumentQueryExecutionContextFactory {
                 isContinuationExpected);
 
         if (ResourceType.Document != resourceTypeEnum
-                || (feedOptions != null && feedOptions.getPartitionKeyRangeIdInternal() != null)) {
+                || (feedOptions != null && feedOptions.getPKRangeId() != null)) {
             return Observable.just(queryExecutionContext);
         }
 
@@ -125,9 +125,9 @@ public class DocumentQueryExecutionContextFactory {
 
                     Single<List<PartitionKeyRange>> partitionKeyRanges;
 
-                    if (feedOptions != null && !StringUtils.isEmpty(feedOptions.getPartitionKeyRangeIdInternal())) {
+                    if (feedOptions != null && !StringUtils.isEmpty(feedOptions.getPKRangeId())) {
                         partitionKeyRanges = queryExecutionContext.getTargetPartitionKeyRangesById(collection.getResourceId(),
-                                feedOptions.getPartitionKeyRangeIdInternal());
+                                feedOptions.getPKRangeId());
                     } else {
                         List<Range<String>> queryRanges = partitionedQueryExecutionInfo.getQueryRanges();
 

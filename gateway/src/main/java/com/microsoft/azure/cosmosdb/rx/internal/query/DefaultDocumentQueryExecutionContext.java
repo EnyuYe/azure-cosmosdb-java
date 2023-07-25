@@ -28,12 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.microsoft.azure.cosmosdb.BridgeInternal;
-import com.microsoft.azure.cosmosdb.FeedOptions;
-import com.microsoft.azure.cosmosdb.FeedResponse;
-import com.microsoft.azure.cosmosdb.PartitionKeyRange;
-import com.microsoft.azure.cosmosdb.Resource;
-import com.microsoft.azure.cosmosdb.SqlQuerySpec;
+import com.microsoft.azure.cosmosdb.*;
 import com.microsoft.azure.cosmosdb.internal.Constants;
 import com.microsoft.azure.cosmosdb.internal.HttpConstants;
 import com.microsoft.azure.cosmosdb.internal.PathsHelper;
@@ -53,7 +48,6 @@ import com.microsoft.azure.cosmosdb.rx.internal.caches.RxCollectionCache;
 import com.microsoft.azure.cosmosdb.rx.internal.caches.IPartitionKeyRangeCache;
 import com.microsoft.azure.cosmosdb.internal.query.metrics.ClientSideMetrics;
 import com.microsoft.azure.cosmosdb.internal.query.metrics.FetchExecutionRangeAccumulator;
-import com.microsoft.azure.cosmosdb.QueryMetrics;
 import com.microsoft.azure.cosmosdb.internal.query.metrics.SchedulingStopwatch;
 import com.microsoft.azure.cosmosdb.internal.query.metrics.SchedulingTimeSpan;
 
@@ -119,7 +113,7 @@ public class DefaultDocumentQueryExecutionContext<T extends Resource> extends Do
         if (isClientSideContinuationToken(originalContinuation)) {
             // At this point we know we want back a query plan
             newFeedOptions.setRequestContinuation(null);
-            newFeedOptions.setMaxDegreeOfParallelism(Integer.MAX_VALUE);
+            ExecutionOptions.setMaxDegreeOfParallelism(Integer.MAX_VALUE);
         }
 
         int maxPageSize = newFeedOptions.getMaxItemCount() != null ? newFeedOptions.getMaxItemCount() : Constants.Properties.DEFAULT_MAX_PAGE_SIZE;
@@ -243,8 +237,8 @@ public class DefaultDocumentQueryExecutionContext<T extends Resource> extends Do
                 this.query,
                 this.getPartitionKeyInternal());
 
-        if (!StringUtils.isEmpty(feedOptions.getPartitionKeyRangeIdInternal())) {
-            request.routeTo(new PartitionKeyRangeIdentity(feedOptions.getPartitionKeyRangeIdInternal()));
+        if (!StringUtils.isEmpty(feedOptions.getPKRangeId())) {
+            request.routeTo(new PartitionKeyRangeIdentity(feedOptions.getPKRangeId()));
         }
 
         return request;
