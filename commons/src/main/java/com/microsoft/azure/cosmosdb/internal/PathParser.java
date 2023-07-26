@@ -23,6 +23,8 @@
 
 package com.microsoft.azure.cosmosdb.internal;
 
+import com.microsoft.azure.cosmosdb.Index;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,32 +41,13 @@ public final class PathParser {
         int currentIndex = 0;
 
         while (currentIndex < path.length()) {
-            if (path.charAt(currentIndex) != segmentSeparator) {
-                throw new IllegalArgumentException(String.format("Invalid path, failed at index %d.", currentIndex));
-            }
+            getPathPart2(path, currentIndex);
 
             if (++currentIndex == path.length())
                 break;
 
             if (path.charAt(currentIndex) == '\"' || path.charAt(currentIndex) == '\'') {
-                char quote = path.charAt(currentIndex);
-                int newIndex = ++currentIndex;
-                while (true) {
-                    newIndex = path.indexOf(quote, newIndex);
-                    if (newIndex == -1) {
-                        throw new IllegalArgumentException(String.format("Invalid path, failed at index %d.", currentIndex));
-                    }
-
-                    if (path.charAt(newIndex - 1) != '\\') {
-                        break;
-                    }
-
-                    ++newIndex;
-                }
-
-                String token = path.substring(currentIndex, newIndex);
-                tokens.add(token);
-                currentIndex = newIndex + 1;
+                getPathPart1(path,currentIndex);
             } else {
                 int newIndex = path.indexOf(segmentSeparator, currentIndex);
                 String token = null;
@@ -82,5 +65,29 @@ public final class PathParser {
         }
 
         return tokens;
+    }
+
+
+    public static void getPathPart1(String path, int currentIndex) {
+        char quote = path.charAt(currentIndex);
+        int newIndex = ++currentIndex;
+        while (true) {
+            newIndex = path.indexOf(quote, newIndex);
+            if (newIndex == -1) {
+                throw new IllegalArgumentException(String.format("Invalid path, failed at index %d.", currentIndex));
+            }
+
+            if (path.charAt(newIndex - 1) != '\\') {
+                break;
+            }
+
+            ++newIndex;
+        }
+    }
+
+    public static void getPathPart2(String path, int currentIndex) {
+        if (path.charAt(currentIndex) != segmentSeparator) {
+            throw new IllegalArgumentException(String.format("Invalid path, failed at index %d.", currentIndex));
+        }
     }
 }
