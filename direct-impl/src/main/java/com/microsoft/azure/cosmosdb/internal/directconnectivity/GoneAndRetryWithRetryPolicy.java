@@ -76,13 +76,9 @@ public class GoneAndRetryWithRetryPolicy implements IRetryPolicy {
         Duration backoffTime = Duration.ofSeconds(0);
         Duration timeout = Duration.ofSeconds(0);
         boolean forceRefreshAddressCache = false;
-        if (!(exception instanceof GoneException) &&
-            !(exception instanceof RetryWithException) &&
-            !(exception instanceof PartitionIsMigratingException) &&
-            !(exception instanceof InvalidPartitionException &&
-            (this.request.getPartitionKeyRangeIdentity() == null ||
-            this.request.getPartitionKeyRangeIdentity().getCollectionRid() == null)) &&
-            !(exception instanceof PartitionKeyRangeIsSplittingException)) {
+
+
+        if (shouldRetryOperation(exception)) {
             logger.debug("Operation will NOT be retried. Current attempt {}, Exception:", this.attemptCount,
                     exception);
             stopStopWatch(this.durationTimer);
@@ -150,6 +146,34 @@ public class GoneAndRetryWithRetryPolicy implements IRetryPolicy {
 
         // Calculate the remaining time based after accounting for the backoff that we
         // will perform
+        Single<ShouldRetryResult> a = shouldRetry1(exception, remainingSeconds, backoffTime, timeout, forceRefreshAddressCache,currentRetryAttemptCount);
+        return a;
+    }
+
+    private void stopStopWatch(StopWatch stopwatch) {
+        synchronized (stopwatch) {
+            stopwatch.stop();
+        }
+    }
+
+    private void startStopWatch(StopWatch stopwatch) {
+        synchronized (stopwatch) {
+            stopwatch.start();
+        }
+    }
+
+    private boolean shouldRetryOperation(Exception exception) {
+        return (!(exception instanceof GoneException) &&
+                !(exception instanceof RetryWithException) &&
+                !(exception instanceof PartitionIsMigratingException) &&
+                !(exception instanceof InvalidPartitionException &&
+                        (this.request.getPartitionKeyRangeIdentity() == null ||
+                                this.request.getPartitionKeyRangeIdentity().getCollectionRid() == null)) &&
+                !(exception instanceof PartitionKeyRangeIsSplittingException));
+    }
+
+
+    public Single<ShouldRetryResult> shouldRetry1(Exception exception, long remainingSeconds, Duration backoffTime, Duration timeout, boolean forceRefreshAddressCache,int currentRetryAttemptCount){
         long timeoutInMillSec = remainingSeconds*1000 - backoffTime.toMillis();
         timeout = timeoutInMillSec > 0 ? Duration.ofMillis(timeoutInMillSec)
                 : Duration.ofSeconds(GoneAndRetryWithRetryPolicy.MAXIMUM_BACKOFF_TIME_IN_SECONDS);
@@ -198,17 +222,5 @@ public class GoneAndRetryWithRetryPolicy implements IRetryPolicy {
         }
         return Single.just(ShouldRetryResult.retryAfter(backoffTime,
                 Quadruple.with(forceRefreshAddressCache, true, timeout, currentRetryAttemptCount)));
-    }
-
-    private void stopStopWatch(StopWatch stopwatch) {
-        synchronized (stopwatch) {
-            stopwatch.stop();
-        }
-    }
-
-    private void startStopWatch(StopWatch stopwatch) {
-        synchronized (stopwatch) {
-            stopwatch.start();
-        }
     }
 }
